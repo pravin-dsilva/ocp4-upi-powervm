@@ -154,13 +154,19 @@ Now wait for the installation to complete. It may take around 40 mins to complet
 
 ## Post Install
 
+### Additional Worker Nodes
+
+Additional worker nodes can be added to a cluster after a successful deployment. Note that Ignition config files that the installation program generates contain certificates that expire after 24 hours, hence any additional worker nodes must be added within 24 hours of a cluster deployment. Also ensure that the bootstrap node is not deleted before adding additional worker nodes.
+
+1. Change the `count` value in `worker` map variable and re-run the apply command. Eg: To add 1 additional worker which has 2 existing workers - `worker = {instance_type = "medium", image_id = "36030215-a959-4b88-a538-8d210595b24a", "count" = 3}`
+2. Run command `terraform apply -var-file var.tfvars`
+
 ### Delete Bootstrap Node
 
 Once the deployment is completed successfully, you can safely delete the bootstrap node. This step is optional but recommended to free up the used during install.
 
 1. Change the `count` value to 0 in `bootstrap` map variable and re-run the apply command. Eg: `bootstrap = {instance_type = "medium", image_id = "468863e6-4b33-4e8b-b2c5-c9ef9e6eedf4", "count" = 0}`
 2. Run command `terraform apply -var-file var.tfvars`
-
 
 ### Create API and Ingress DNS Records
 You will also need to add the following records to your DNS server:

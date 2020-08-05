@@ -103,7 +103,11 @@ locals {
     }
 }
 
-resource "null_resource" "config" {
+resource "null_resource" "config" { 
+    triggers = {
+        worker_count = length(var.worker_ips)
+    }
+ 
     connection {
         type        = "ssh"
         user        = var.rhel_username
@@ -140,6 +144,10 @@ resource "null_resource" "config" {
 
 resource "null_resource" "install" {
     depends_on = [null_resource.config]
+    
+    triggers = {
+        worker_count = length(var.worker_ips)
+    }
 
     connection {
         type        = "ssh"
